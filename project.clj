@@ -9,6 +9,7 @@
                  [expound "0.8.9"]
                  [funcool/struct "1.4.0"]
                  [json-html "0.4.7"]
+                 [luminus-migrations "0.6.7"]
                  [luminus-transit "0.1.2"]
                  [luminus-undertow "0.1.11"]
                  [luminus/ring-ttl-session "0.3.3"]
@@ -28,7 +29,11 @@
                  [ring-webjars "0.2.0"]
                  [ring/ring-core "1.9.4"]
                  [ring/ring-defaults "0.3.3"]
-                 [selmer "1.12.44"]]
+                 [selmer "1.12.44"]
+                 [enlive "1.1.6"]
+                 [com.h2database/h2 "1.4.197"]
+                 [conman "0.8.3"]
+                 [org.postgresql/postgresql "42.2.23.jre7"]]
 
   :min-lein-version "2.0.0"
   

@@ -9,7 +9,23 @@
     [reitit.ring.middleware.parameters :as parameters]
     [chaas.middleware.formats :as formats]
     [ring.util.http-response :refer :all]
-    [clojure.java.io :as io]))
+    [clojure.java.io :as io]
+    [net.cgrand.enlive-html :as html]
+    [clojure.string :as str]
+    [chaas.db.core :as db]))
+
+(defn save-palette! [c0 c1 c2 c3 url url_id]
+  (db/create-palette!
+      {:color_0 c0
+       :color_1 c1
+       :color_2 c2
+       :color_3 c3
+       :url url
+       :url_id url_id }))
+
+(comment 
+  (db/get-palettes)
+  )
 
 (defn service-routes []
   ["/api"
@@ -48,8 +64,36 @@
 
    ["/ping"
     {:get (constantly (ok {:message "pong"}))}]
-   
 
+   ["/scrape"
+     {:post {:summary "plus with spec body parameters"
+             :parameters {:body {:target string?}}
+             :responses {200 {:body {:color_0 string? 
+                                     :color_1 string? 
+                                     :color_2 string?
+                                     :color_3 string?
+                                     :url string?
+                                     :url_id string?}}}
+             :handler (fn [{{{:keys [target]} :body} :parameters}]
+                        (if-let [palette (db/get-palette-by-url-id {:url_id target})]
+                          palette
+                          (let [url (str "https://www.colorhunt.co/palette/" target)
+                                page (with-open [inputstream (-> (java.net.URL. url)
+                                                                 .openConnection
+                                                                 (doto (.setRequestProperty "User-Agent"
+                                                                                            "Mozilla/5.0 ..."))
+                                                                 .getContent)]
+                                       (html/html-resource inputstream))
+                                palettes (nth (html/select page [:meta]) 7)
+                                [c0 c1 c2 c3] (map #(str/join (drop 1 %))  (take 4 (drop 2 (str/split (:content (:attrs palettes)) #" "))))]
+                            (save-palette! c0 c1 c2 c3 url target)
+                            {:status 200
+                             :body {:color_0 c0
+                                    :color_1 c1
+                                    :color_2 c2
+                                    :color_3 c3
+                                    :url url
+                                    :url_id target}})))}}]
    ["/math"
     {:swagger {:tags ["math"]}}
 
