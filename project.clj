@@ -33,7 +33,8 @@
                  [enlive "1.1.6"]
                  [com.h2database/h2 "1.4.197"]
                  [conman "0.8.3"]
-                 [org.postgresql/postgresql "42.2.23.jre7"]]
+                 [org.postgresql/postgresql "42.2.23.jre7"]
+                 [ctmx "1.4.3"]]
 
   :min-lein-version "2.0.0"
   

@@ -12,6 +12,7 @@
     [clojure.java.io :as io]
     [net.cgrand.enlive-html :as html]
     [clojure.string :as str]
+    [chaas.models.core :as models]
     [chaas.db.core :as db]))
 
 (defn save-palette! [c0 c1 c2 c3 url url_id]
@@ -21,11 +22,7 @@
        :color_2 c2
        :color_3 c3
        :url url
-       :url_id url_id }))
-
-(comment 
-  (db/get-palettes)
-  )
+       :url_id url_id}))
 
 (defn service-routes []
   ["/api"
@@ -75,25 +72,10 @@
                                      :url string?
                                      :url_id string?}}}
              :handler (fn [{{{:keys [target]} :body} :parameters}]
-                        (if-let [palette (db/get-palette-by-url-id {:url_id target})]
-                          palette
-                          (let [url (str "https://www.colorhunt.co/palette/" target)
-                                page (with-open [inputstream (-> (java.net.URL. url)
-                                                                 .openConnection
-                                                                 (doto (.setRequestProperty "User-Agent"
-                                                                                            "Mozilla/5.0 ..."))
-                                                                 .getContent)]
-                                       (html/html-resource inputstream))
-                                palettes (nth (html/select page [:meta]) 7)
-                                [c0 c1 c2 c3] (map #(str/join (drop 1 %))  (take 4 (drop 2 (str/split (:content (:attrs palettes)) #" "))))]
-                            (save-palette! c0 c1 c2 c3 url target)
-                            {:status 200
-                             :body {:color_0 c0
-                                    :color_1 c1
-                                    :color_2 c2
-                                    :color_3 c3
-                                    :url url
-                                    :url_id target}})))}}]
+                        (let [{:keys [result] :as x} (models/fetch-palette target)]
+                          (if (= :success result)
+                            {:status 200 :body x}
+                            {:status 400})))}}]
    ["/math"
     {:swagger {:tags ["math"]}}
 
