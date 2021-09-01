@@ -16,7 +16,6 @@
    :headers {"Content-Type" "text/html"}
    :body body})
 
-
 (defn html5-response
   ([body]
    (html-response
@@ -27,9 +26,23 @@
                 :content "width=device-width, initial-scale=1, shrink-to-fit=no"}]]
        [:body (render/walk-attrs body)]
        [:script {:src "https://unpkg.com/htmx.org@1.5.0"}]
-       [:link {:href "https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" :rel "stylesheet"}]
-       ))))
+       [:link {:href "https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" :rel "stylesheet"}]))))
 
+(defn nav-bar []
+  [:nav {:class "relative flex flex-wrap items-center justify-between px-2 py-3 bg-blue-500 mb-3"}
+   [:div {:class "container px-4 mx-auto flex flex-wrap items-center justify-between"}
+    [:div {:class "relative flex justify-between w-auto px-4 static block justify-start"}
+     [:a {:class "text-sm font-bold leading-relaxed inline-block mr-4 py-2 whitespace-nowrap uppercase text-white" :href "#"}
+      "Home"]
+     [:a {:class "text-sm font-bold leading-relaxed inline-block mr-4 py-2 whitespace-nowrap uppercase text-white" :href "/api/api-docs/"}
+      "API"]]
+    [:div {:class "flex flex-grow items-center"}
+     [:ul {:class "flex flex-row list-none ml-auto"}
+      [:li {:class "nav-item"}
+       [:a {:class "px-3 py-2 flex items-center text-xs uppercase font-bold leading-snug text-white hover:opacity-75"
+            :href "https://github.com/SalvatoreTosti"
+            :target "_"}
+        [:i {:class "text-lg leading-lg text-white opacity-75"} "Salvatore"]]]]]]])
 
 (defn link
   [text destination]
@@ -41,7 +54,6 @@
         color-1 (str "background-color: #" color_1)
         color-2 (str "background-color: #" color_2)
         color-3 (str "background-color: #" color_3)] 
-
     [:div 
      {:hx-target "this" :hx-swap "outerHTML" :class "grid justify-center items-center grid-flow-col grid-cols-2 gap-5" }
      [:div
@@ -66,6 +78,7 @@
     "/"
     (fn [req]
       (html5-response
+        [:div (nav-bar)
         [:div {:class "container mx-auto p-4"}
          [:div {:class "font-bold text-blue-500 text-center my-5 text-5xl"} "Color Hunt As A Service"]
-         (palette req (rand-nth ["f5e8c7deba9d9e77776f4c5b" "bc658d82c4c3f9d89cf5a7a7" "6f69ac95dac1ffeba1fd6f96"]))]))))
+         (palette req (rand-nth ["f5e8c7deba9d9e77776f4c5b" "bc658d82c4c3f9d89cf5a7a7" "6f69ac95dac1ffeba1fd6f96"]))]]))))

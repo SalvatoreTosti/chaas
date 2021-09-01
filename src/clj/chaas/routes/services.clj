@@ -48,8 +48,8 @@
 
    ;; swagger documentation
    ["" {:no-doc true
-        :swagger {:info {:title "my-api"
-                         :description "https://cljdoc.org/d/metosin/reitit"}}}
+        :swagger {:info {:title "CHAAS API"
+                         :description "http://www.chaas.art"}}}
 
     ["/swagger.json"
      {:get (swagger/create-swagger-handler)}]
@@ -60,7 +60,7 @@
               :config {:validator-url nil}})}]]
 
    ["/palettes"
-     {:post {:summary "plus with spec body parameters"
+     {:post {:summary "fetch a palette from colorhunt.co"
              :parameters {:body {:target string?}}
              :responses {200 {:body {:color_0 string? 
                                      :color_1 string? 
