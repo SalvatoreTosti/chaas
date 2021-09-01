@@ -35,7 +35,9 @@
      [:a {:class "text-sm font-bold leading-relaxed inline-block mr-4 py-2 whitespace-nowrap uppercase text-white hover:opacity-75" :href "#"}
       "Home"]
      [:a {:class "text-sm font-bold leading-relaxed inline-block mr-4 py-2 whitespace-nowrap uppercase text-white hover:opacity-75" :href "/api/api-docs/"}
-      "API"]]
+      "API"]
+     [:a {:class "text-sm font-bold leading-relaxed inline-block mr-4 py-2 whitespace-nowrap uppercase text-white hover:opacity-75" :href "https://www.colorhunt.co/"}
+      "colorhunt.co"]]
     [:div {:class "flex flex-grow items-center"}
      [:ul {:class "flex flex-row list-none ml-auto"}
       [:li {:class "nav-item"}
