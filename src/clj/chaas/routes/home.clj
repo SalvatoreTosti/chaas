@@ -35,13 +35,7 @@
   [text destination]
   [:a {:href destination :target "_" :class "text-blue-500 hover:opacity-75"} text])
 
-(defn home-page [request]
-  (layout/render request "home.html" {:docs (-> "docs/docs.md" io/resource slurp)}))
-
-(defn about-page [request]
-  (layout/render request "about.html"))
-
-(ctmx/defcomponent ^:endpoint fetch [req input]
+(ctmx/defcomponent ^:endpoint palette [req input]
   (let [{:keys [color_0 color_1 color_2 color_3 result] :as x} (models/fetch-palette input)
         color-0 (str "background-color: #" color_0)
         color-1 (str "background-color: #" color_1)
@@ -51,14 +45,13 @@
     [:div 
      {:hx-target "this" :hx-swap "outerHTML" :class "grid justify-center items-center grid-flow-col grid-cols-2 gap-5" }
      [:div
-      [:label {:class "font-bold text-blue-500 text-center text-4xl"} "Color Hunt Palette ID"]
       [:input
        {:name "input"
         :autocomplete "off"
         :value input 
-        :hx-get "fetch"
+        :hx-get "palette"
         :class "form-textarea w-full border-blue-500 border rounded"
-        :placeholder ""}]]
+        :placeholder "Color Hunt palette URL or ID"}]]
      (if (= :success result) 
        [:div {:class "grid justify-center items-center grid-cols-4 gap-5"}
         [:div {:class "w-32 h-32 rounded m-auto" :style color-0}]
@@ -74,5 +67,5 @@
     (fn [req]
       (html5-response
         [:div {:class "container mx-auto p-4"}
-         [:div {:class "font-bold text-blue-500 text-center my-5 text-5xl"} "chaas"]
-         (fetch req (rand-nth ["f5e8c7deba9d9e77776f4c5b" "bc658d82c4c3f9d89cf5a7a7" "6f69ac95dac1ffeba1fd6f96"]))]))))
+         [:div {:class "font-bold text-blue-500 text-center my-5 text-5xl"} "Color Hunt As A Service"]
+         (palette req (rand-nth ["f5e8c7deba9d9e77776f4c5b" "bc658d82c4c3f9d89cf5a7a7" "6f69ac95dac1ffeba1fd6f96"]))]))))
